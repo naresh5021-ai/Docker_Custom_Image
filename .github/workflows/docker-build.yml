@@ -1,0 +1,50 @@
+name: Docker Build & Push
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  IMAGE_NAME: jnaresh5021/custom_image2
+
+jobs:
+  docker-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Clone the Repo
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # Step 2: Docker Test
+      - name: Docker Version & Status
+        run: |
+          docker --version
+          docker ps
+
+      # Step 3: Build Docker Image
+      - name: Build Docker Image
+        run: docker build -t $IMAGE_NAME:${{ github.run_number }} .
+
+      # Step 4: Debug Docker
+      - name: Debug Docker Info
+        run: |
+          whoami
+          docker --version
+          docker context ls
+          docker context show
+          docker info
+
+      # Step 5: Login & Push to Docker Hub
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_PASS }}
+
+      - name: Push Docker Image
+        run: docker push $IMAGE_NAME:${{ github.run_number }}
+
+      - name: Logout Docker
+        run: docker logout
