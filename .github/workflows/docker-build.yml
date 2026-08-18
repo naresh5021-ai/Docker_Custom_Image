@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 env:
-  IMAGE_NAME: jnaresh5021/custom_image2
+  IMAGE_NAME: jnaresh5021/jnk_myproject
 
 jobs:
   docker-build:
